@@ -1,19 +1,10 @@
 "use strict";
 import { createStore } from "redux";
 
-//STEP 3 define reducers
-const reducer = function(state = { books: [] }, action) {
-  switch (action.type) {
-    case "POST_BOOK":
-      //   let books = state.books.concat(action.payload);
-      //   return { books };
-      return { books: [...state.books, ...action.payload] };
-      break;
-  }
-  return state;
-};
+//IMPORT COMBINE REDUCER
+import reducers from "./reducers/index";
 //STEP 1 create the store
-const store = createStore(reducer);
+const store = createStore(reducers);
 
 store.subscribe(function() {
   console.log("current state is:", store.getState());
@@ -51,4 +42,16 @@ store.dispatch({
       price: 33.333
     }
   ]
+});
+
+// Dispatch delete a book
+store.dispatch({
+  type: "DELETE_BOOK",
+  payload: { id: 1 }
+});
+
+// Dispatch Update a book
+store.dispatch({
+  type: "UPDATE_BOOK",
+  payload: { id: 2, title: "learn redux in 24h" }
 });

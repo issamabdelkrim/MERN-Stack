@@ -1,57 +1,49 @@
 "use strict";
-import { createStore } from "redux";
-
+import { applyMiddleware, createStore } from "redux";
+import { logger } from "redux-logger";
 //IMPORT COMBINE REDUCER
 import reducers from "./reducers/index";
-//STEP 1 create the store
-const store = createStore(reducers);
 
-store.subscribe(function() {
-  console.log("current state is:", store.getState());
-  //console.log("second book price is:", store.getState()[1].price);
-});
+//import add to cart actions
+import { addToCart } from "./actions/cartActions";
+
+import { postBooks, updateBooks, deleteBooks } from "./actions/booksActions";
+//STEP 1 create the store
+
+const middleware = applyMiddleware(logger);
+const store = createStore(reducers, middleware);
+// store.subscribe(function() {
+//   console.log("current state :", store.getState());
+//   //console.log("second book price is:", store.getState()[1].price);
+// });
 
 //STEP 2 created and dispatch actions
-store.dispatch({
-  type: "POST_BOOK",
-  payload: [
+store.dispatch(
+  postBooks([
     {
       id: 1,
-      title: "this is a book",
+      title: "this is a first book",
       description: " React books",
       price: 33.333
     },
     {
       id: 2,
       title: "this is a second book",
-      description: " Redux  books",
-      price: 66.66
-    }
-  ]
-});
-
-// Dispatch third books
-
-store.dispatch({
-  type: "POST_BOOK",
-  payload: [
+      description: " React books",
+      price: 44.333
+    },
     {
       id: 3,
       title: "this is a third book",
       description: " React books",
-      price: 33.333
+      price: 55.333
     }
-  ]
-});
+  ])
+);
 
-// Dispatch delete a book
-store.dispatch({
-  type: "DELETE_BOOK",
-  payload: { id: 1 }
-});
+// Dispatch third books
+store.dispatch(deleteBooks({ id: 1 }));
+// -> CART ACTIONS <<--
+// ADD to Cart
 
-// Dispatch Update a book
-store.dispatch({
-  type: "UPDATE_BOOK",
-  payload: { id: 2, title: "learn redux in 24h" }
-});
+store.dispatch(addToCart([{ id: 1 }]));
